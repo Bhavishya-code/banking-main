@@ -117,7 +117,9 @@ export async function getLoggedInUser() {
     console.log(error)
     return null;
   }
+
 }
+
 
 export const logoutAccount = async () => {
   try {

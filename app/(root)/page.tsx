@@ -1,23 +1,34 @@
+
 import HeaderBox from '@/components/HeaderBox'
 import RecentTransactions from '@/components/RecentTransactions';
 import RightSidebar from '@/components/RightSidebar';
 import TotalBalanceBox from '@/components/TotalBalanceBox';
 import { getAccount, getAccounts } from '@/lib/actions/bank.actions';
 import { getLoggedInUser } from '@/lib/actions/user.actions';
+import { redirect } from 'next/navigation'; // ✅ ADDED: Import redirect for handling unauthenticated users
 
 const Home = async ({ searchParams: { id, page } }: SearchParamProps) => {
   const currentPage = Number(page as string) || 1;
-  const loggedIn = await getLoggedInUser();
-  const accounts = await getAccounts({ 
-    userId: loggedIn.$id 
-  })
 
-  if(!accounts) return;
-  
-  const accountsData = accounts?.data;
+  const loggedIn = await getLoggedInUser();
+
+  // ✅ ADDED: Check if user is not logged in and redirect to sign-in page
+  if (!loggedIn) {
+    redirect('/sign-in');
+  }
+
+  const accounts = await getAccounts({ 
+    userId: loggedIn.$id  // ✅ FIXED: Safe to access $id only after checking loggedIn is not null
+  });
+
+  // ✅ ADDED: Check if accounts or accounts.data is invalid or empty
+  if (!accounts || !accounts.data || accounts.data.length === 0) return;
+
+  const accountsData = accounts.data;
+
   const appwriteItemId = (id as string) || accountsData[0]?.appwriteItemId;
 
-  const account = await getAccount({ appwriteItemId })
+  const account = await getAccount({ appwriteItemId });
 
   return (
     <section className="home">

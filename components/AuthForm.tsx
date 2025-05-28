@@ -72,8 +72,11 @@ const AuthForm = ({ type }: { type: string }) => {
             email: data.email,
             password: data.password,
           })
-
-          if(response) router.push('/')
+           console.log("Sign In response:",response)
+          if (response) {
+            await new Promise(resolve => setTimeout(resolve, 100)); // Add this
+            router.push('/');
+          }
         }
       } catch (error) {
         console.log(error);
