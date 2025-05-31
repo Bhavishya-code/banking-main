@@ -15,11 +15,11 @@ const {
   APPWRITE_USER_COLLECTION_ID: USER_COLLECTION_ID,
   APPWRITE_BANK_COLLECTION_ID: BANK_COLLECTION_ID,
 } = process.env;
-
+// This function helps retrieve a specific user's profile details stored in your Appwrite database, using their unique userId.
 export const getUserInfo = async ({ userId }: getUserInfoProps) => {
   try {
     const { database } = await createAdminClient();
-
+  
     const user = await database.listDocuments(
       DATABASE_ID!,
       USER_COLLECTION_ID!,
